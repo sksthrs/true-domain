@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>そのURL、本当はどのドメイン？</title>
+  <style>/* スタイル指定が長くてごめんね */
+    html,
+    body {
+      font: sans-serif 16pt;
+      color: #303030;
+      background-color: #f0f0f0;
+    }
+    div#top {
+      margin: 0;
+      padding: 0.5em 1em;
+      gap: 1.0em;
+    }
+    h1 {
+      font-size: 1.2rem;
+      font-weight: normal;
+      border-bottom: #505050 1px solid;
+      margin: 0;
+      padding: 0;
+    }
+    input#src {
+      font: inherit;
+      border-width: 2px;
+      padding: 0.2em;
+    }
+    div#domain-container {
+      padding: 0.2em;
+      color: #f0f0f0;
+      background-color: #303030;
+    }
+    .flex-h {
+      display: flex;
+      flex-direction: row;
+    }
+    .flex-v {
+      display: flex;
+      flex-direction: column;
+    }
+    .flex-v {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="top" class="flex-v">
+    <h1>URLの「本当のドメイン」をチェック！</h1>
+    <div id="src-container" class="flex-h">
+      <input type="text" id="src" class="flex-v" placeholder="URLを貼りつけてください" />
+    </div>
+    <div id="domain-container" class="flex-h">本当のドメイン → <span id="domain" class="flex-v"></span></div>
+    <div id="description">
+      <div>このページでは、上の欄にURLを入力すると自動的に「そのURLの本当のドメイン」を表示します。なお、処理はページ内で完結しており、他のサーバなどには一切送られていません。</div>
+      <div>このページをクローンしたい方は、<a href="https://github.com/sksthrs/true-domain/">リポジトリ</a>からどうぞ。</div>
+    </div>
+  </div>
+
+  <script>
+    // 要するにURLからURLオブジェクト作ってoriginを表示するだけ（hostnameでもいいけど）
+    const src = document.getElementById('src')
+    const dest = document.getElementById('domain')
+    src.addEventListener('input', ev => {
+      const url_text = makeURL(ev.target.value)
+      if (url_text != null) {
+        dest.textContent = url_text
+      } else {
+        dest.textContent = '（無効なURL）'
+      }
+    })
+
+    function makeURL(text) {
+      try {
+        const ur1 = new URL(text)
+        return url.origin
+      } catch(_e1) {
+        try {
+          const url = new URL('https://' + text)
+          return url.hostname
+        } catch(_e2) {
+          return undefined
+        }
+      }
+    }
+
+    src.focus()
+  </script>
+</body>
+
+</html>
